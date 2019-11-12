@@ -17,7 +17,7 @@
                                 {!! Form::open(['method' => 'POST', 'url' => 'servicio/enregistrer', 'class' => 'form-horizontal',
                                       'files' => true, 'enctype'=>'multipart/form-data']) !!}
                                 <div class="form-group{{ $errors->has('subject') ? ' has-error' : '' }}">
-                                    {!! Form::label('subject', 'Tema :') !!}
+                                    {!! Form::label('subject', 'Asunto :') !!}
                                     {!! Form::text('subject', null, ['class' => 'form-control', 'required' => 'required']) !!}
                                     <small class="text-danger">{{ $errors->first('subject', 'El campo tema es requerido.') }}</small>
                                 </div>
