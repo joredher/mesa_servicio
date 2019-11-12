@@ -65,6 +65,7 @@ class TraitementController extends Controller
                 $ticket->fecha_consulta = Carbon::now()->toDateString();
             }
             $ticket->etat = 'Terminado';
+            $ticket->orden = 3;
             $ticket->save();
 
             // envoyer un mail pour le demandeur

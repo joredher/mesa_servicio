@@ -29,7 +29,7 @@ class TicketTraite extends Mailable
     public function build()
     {
         $ticket=$this->ticket;
-        return $this->view('mail.tickettraite', compact('ticket'))
-           ->subject('Servicio terminado');
+        return $this->view('mail.servicio', compact('ticket'))
+           ->subject("El Servicio #$ticket->id Reportado Para Soporte Ha Finalizado");
     }
 }

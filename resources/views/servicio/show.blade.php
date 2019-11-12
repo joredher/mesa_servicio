@@ -80,7 +80,7 @@
                                                 @foreach($ticket->files as $archive)
                                                     <div class="col-xs-6 col-md-3">
                                                         <a href="{{ $archive->url_path }}" class="thumbnail">
-                                                            <img src="{!! $archive->url_path !!}"
+                                                            <img src="{{ $archive->url_path }}"
                                                                  alt="{!! $archive->name_file !!}">
                                                         </a>
                                                     </div>

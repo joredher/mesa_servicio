@@ -40,6 +40,11 @@ class HomeController extends Controller
             $tickets = Ticket::where('user_id', Auth::user()->id)->paginate(10);
         }
 
-        return view('home', compact('tickets', 'statistiques', 'priorites'));
+        if (Auth::user()->role === 'admin') {
+            return view('home', compact('tickets', 'statistiques', 'priorites'));
+        } else {
+            return redirect('servicios_all');
+        }
+
     }
 }

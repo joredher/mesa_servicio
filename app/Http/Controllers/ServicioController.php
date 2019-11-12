@@ -59,7 +59,6 @@ class ServicioController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-
         $nFiles = count($request->file('files'));
         foreach (range(0, $nFiles) as $item) {
             $this->rules['files.'.$item] = 'image|mimes:jpeg,bmp,png|max:2000';
@@ -71,6 +70,7 @@ class ServicioController extends Controller
         $data = array_add($data,'categorie_id',
             Categories::where('name','=','Soporte Técnico')->first()['id']);
         $ticket = Ticket::create($data);
+
         if ($request->hasFile('files')) {
             $files = $request->file('files');
             foreach ($files as $file) {

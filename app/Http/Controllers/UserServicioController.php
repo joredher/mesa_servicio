@@ -58,6 +58,7 @@ class UserServicioController extends Controller
         $ticket = Ticket::with('files')->findOrFail($id);
         if ($ticket->etat === 'Creado') {
             $ticket->etat = 'En curso';
+            $ticket->orden = 2;
             $ticket->save();
         }
 
