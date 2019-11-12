@@ -7,3 +7,4 @@ Homestead.json
 Homestead.yaml
 .env
 yarn-error.log
+package-lock.json
