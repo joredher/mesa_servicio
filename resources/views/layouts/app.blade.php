@@ -53,9 +53,14 @@
     @if(Auth::user())
         <nav class="navbar navbar-default navbar-static-top nav_color">
             {{--        <nav class="navbar navbar-pills nav-stacked nav_color">--}}
+            <img src="{{ asset('img/logo.PNG') }}"
+                 data-toggle="tooltip"
+                 data-placement="bottom"
+                 title="Mesa de Servicio"
+                 alt="LOGO" style="width: 3.5% !important; position: absolute !important;">
             <div class="container">
-                <div class="navbar-header">
 
+                <div class="navbar-header">
                     <!-- Collapsed Hamburger -->
                     <button type="button" class="navbar-toggle collapsed"
                             data-toggle="collapse" data-target="#app-navbar-collapse">
