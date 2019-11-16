@@ -57,7 +57,6 @@ class UsersController extends Controller
 
     public function store(Request $request)
     {
-        dd($request->all());
         if (Auth::user()->role === 'user') {
             $this->rules['dependencia'] = 'required';
         }
@@ -67,7 +66,7 @@ class UsersController extends Controller
         $user = new User();
         $this->saveAtrributosUser($request, $user);
 
-        $user->password = isset($request->password) ? $request->password : bcrypt($request->identification);
+        $user->password = bcrypt(isset($request->password) ? $request->password : $request->identification);
         $user->save();
 
         if ($this->esRolAgente($request)) {

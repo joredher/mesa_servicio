@@ -73,7 +73,7 @@
                             {!! Form::close() !!}
                         </div>
                     </div>
-                    <div class="panel-body">
+                    <div class="panel-body" id="services_refresh">
                         <table class="table table-striped table-bordered table-hovered ">
                             <tr>
                                 <td>#</td>
@@ -87,6 +87,7 @@
                                 @endif
                                 <td class="text-center">Opciones</td>
                             </tr>
+
                             @foreach ($tickets as $ticket)
                                 <tr>
                                     <td>{{ $ticket->id }}</td>
@@ -116,7 +117,8 @@
                                             </a>
                                         </div>
                                         @if((Auth::user()->role === 'agent' && $ticket->etat !== 'Terminado')
-                                        || (Auth::user()->role === 'admin' && $ticket->etat !== 'Terminado' && !is_null($ticket->fecha_consulta)))
+                                        || (Auth::user()->role === 'admin' && $ticket->etat !== 'Terminado'
+                                        && !is_null($ticket->fecha_consulta)))
                                             <div class="{{(is_null($ticket->fecha_consulta)
                                                             ? 'col-sm-6' : 'col-sm-4')}} text-center">
                                                 <a href="{{ url('servicio/'.$ticket->id.'/consulter')}}"
@@ -128,7 +130,8 @@
                                                 </a>
                                             </div>
                                         @endif
-                                        @if(Auth::user()->role === 'admin' && $ticket->etat !== 'Terminado' && is_null($ticket->fecha_consulta))
+                                        @if(Auth::user()->role === 'admin' && $ticket->etat !== 'Terminado'
+                                        && is_null($ticket->fecha_consulta) && (!is_null($ticket->agent_id)))
                                             <div class="{{(is_null($ticket->fecha_consulta)
                                                             ? 'col-sm-6' : 'col-sm-4')}} text-center">
                                                 <a data-toggle="modal"
@@ -139,6 +142,18 @@
                                                    id="modalUno"
                                                    class="btn btn-success btn-sm">
                                                     <i class="fas fa-file-alt"></i>
+                                                </a>
+                                            </div>
+                                        @endif
+                                        @if(Auth::user()->role  === 'admin' && (is_null($ticket->agent_id))
+                                            && $ticket->etat === 'Creado')
+                                            <div class="col-sm-6 text-center">
+                                                <a href="{{ url('servicio/'.$ticket->id.'/consulter?var=1')}}"
+                                                   data-toggle="tooltip"
+                                                   data-placement="top"
+                                                   title="{{"Asignar Servicio #$ticket->id"}}"
+                                                   class="btn btn-warning btn-sm">
+                                                    <i class="fas fa-user-plus"></i>
                                                 </a>
                                             </div>
                                         @endif
@@ -167,6 +182,12 @@
 @endsection
 @push('scripts')
     <script type="text/javascript">
+        $(document).ready(function () {
+            function refresh() {
+                $('#services_refresh').trigger('click',window.document)
+            }
+            setInterval(refresh, 3000)
+        })
         function myConsult(value) {
             if (value !== 1) {
                 if (value[0].role === "admin") {
@@ -175,6 +196,7 @@
                 }
             } else {
                 $("#resTicket").removeAttr('href');
+                $('.close').trigger('click')
             }
         }
     </script>

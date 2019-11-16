@@ -4,6 +4,7 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Ticket extends Model
 {
@@ -17,7 +18,8 @@ class Ticket extends Model
         'priorite_id',
         'categorie_id',
         'fecha_consulta',
-        'orden'
+        'orden',
+        'agent_id'
     ];
 
     protected $appends = ['dias'];
@@ -35,6 +37,11 @@ class Ticket extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function agent()
+    {
+        return $this->belongsTo(User::class, 'agent_id');
     }
 
     public function traitements()

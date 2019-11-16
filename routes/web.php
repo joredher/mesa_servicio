@@ -26,6 +26,7 @@ Route::group(['middleware' => 'auth'], function () {
     /* Servicios */
     Route::get('servicios_all','UserServicioController@index');
     Route::get('servicio/{id}/consulter','UserServicioController@consulter');
+    Route::post('servicio/{id}/asignar','UserServicioController@assign');
 
     Route::get('servicio/nouveau','ServicioController@create');
     Route::get('servicio/{id}/ver','ServicioController@ver');

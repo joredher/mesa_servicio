@@ -16,5 +16,14 @@ class AlterAddOrdenFieldInTicketsTable extends Migration
     {
         DB::statement("ALTER TABLE `tickets` 
         ADD COLUMN `orden` INT(15) NOT NULL DEFAULT 1 AFTER `fecha_consulta`");
+        DB::statement("ALTER TABLE `tickets` 
+                ADD COLUMN `agent_id` INT(10) UNSIGNED NULL DEFAULT NULL AFTER `fecha_consulta`,
+                ADD INDEX `fk_tickets_agent_id_foreign_idx` (`agent_id` ASC) VISIBLE");
+        DB::statement("ALTER TABLE `tickets` 
+                    ADD CONSTRAINT `fk_tickets_agent_id_foreign`
+                      FOREIGN KEY (`agent_id`)
+                      REFERENCES `users` (`id`)
+                      ON DELETE RESTRICT
+                      ON UPDATE NO ACTION");
     }
 }
