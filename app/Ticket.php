@@ -56,6 +56,21 @@ class Ticket extends Model
 
     /*SCOPE*/
 
+    public function scopeFiltersService($query)
+    {
+        $priory = request()->input('priory');
+        $etat = request()->input('etat');
+        $fecha_incial = request()->get('fecha1');
+        $item = ($etat === 1) ? 'Creado' : ($etat === 2 ? 'En curso' : ($etat === 3 ? 'Terminado' : null));
+        $query->when($priory, function($query) use ($priory) {
+            $query->where('priorite_id',$priory);
+        })->when($item, function($query) use ($item) {
+            $query->where('etat',$item);
+        })->when($fecha_incial, function ($query) use ($fecha_incial){
+            $query->where('fecha_consulta','=',$fecha_incial);
+        });
+    }
+
     public function scopePriory($query, $priory)
     {
         if ((trim($priory) !== '' || ! is_null($priory))) {

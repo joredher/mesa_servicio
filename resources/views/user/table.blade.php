@@ -29,8 +29,15 @@
                             {!! Form::model(Request::only(['name','role']),['method' =>'GET', 'url' => 'users_all',
                             'class' => 'navbar-form navbar-left pull-right','role'=> 'search']) !!}
                             <div class="form-group">
+                                <a href="{{ url('users_all') }}"
+                                   data-toggle="tooltip"
+                                   data-placement="top"
+                                   title="Recargar"
+                                   class="btn btn-primary btn-md">
+                                    <i class="fas fa-sync"></i>
+                                </a>
                                 {!! Form::text('name',null,['class' => 'form-control',
-                                'placeholder'=>'Nombre de Usuario','name'=>'name']) !!}
+                                'placeholder'=>'Buscar Usuario','name'=>'name']) !!}
                                 {!! Form::select('role', ['' => 'Seleccione un rol','user' => 'Usuario','agent' => 'Agente'],
                                 null, ['class' => 'form-control']) !!}
                             </div>

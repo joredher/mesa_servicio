@@ -66,6 +66,19 @@
                             ['method' =>'GET', 'url' => 'servicios_all',
                             'class' => 'navbar-form navbar-left pull-right','role'=> 'search']) !!}
                             <div class="form-group">
+                                <a href="{{ url('servicios_all') }}"
+                                   data-toggle="tooltip"
+                                   data-placement="top"
+                                   title="Recargar"
+                                   class="btn btn-primary btn-md">
+                                    <i class="fas fa-sync"></i>
+                                </a>
+                                {!! Form::date('fecha1', null, ['class' => 'form-control',
+                                'min' => "2000-01-01",
+                                'data-toggle'=>"tooltip",
+                                'data-placement'=>"top",
+                                'title'=>"Fecha Consulta",
+                                'max' => \Carbon\Carbon::now()->format('Y-m-d')])!!}
                                 {!! Form::select('etat', config('options.status'), null, ['class' => 'form-control']) !!}
                                 {!! Form::select('priory', config('options.priorities'), null, ['class' => 'form-control']) !!}
                             </div>
@@ -173,7 +186,7 @@
                                 </tr>
                             @endforeach
                         </table>
-                        {{ $tickets->appends(\Illuminate\Support\Facades\Request::only(['priory','etat']))->render() }}
+                        {{ $tickets->appends(\Illuminate\Support\Facades\Request::only(['priory','etat','fecha1']))->render() }}
                     </div>
                 </div>
             </div>

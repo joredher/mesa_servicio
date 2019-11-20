@@ -27,22 +27,10 @@ class UsersController extends Controller
         $this->middleware(['auth', 'isadmin']);
     }
 
-//    public function index(Request $request)
-//    {
-//        $users = User::byName($request->get('name'))
-//                        ->where('id','<>',Auth::user()->id)->orderBy('id','desc')->paginate();
-//        return view('user.table',compact('users'));
-//    }
-
-    public function show(Request $request)
+    public function show()
     {
-        $name = Input::get('name');
-        $role = Input::get('role');
-        if ($name || $role) {
-            $users = User::byNameUser($name)->role($role)->where('id', '<>', Auth::user()->id)->orderBy('id', 'desc')->paginate(100);
-        } else {
-            $users = User::where('id', '<>', Auth::user()->id)->orderBy('id', 'desc')->paginate(100);
-        }
+        $users = User::byNameUser()->where('id', '<>', Auth::user()->id)->orderBy('id', 'desc')->paginate(100);
+
         return view('user.table', compact('users'));
     }
 

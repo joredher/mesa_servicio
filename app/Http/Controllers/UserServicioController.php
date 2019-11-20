@@ -23,38 +23,17 @@ class UserServicioController extends Controller
         //$this->middleware('isadmin')->only('assign');
     }
 
-    public function index(Request $request)
+    public function index()
     {
-        $admin = (Auth::user()->role === 'admin');
-        $agent = Auth::user()->role === 'agent';
-        $priory = is_null($request->get('priory')) ? null : ((integer) $request->get('priory'));
-        $etat = is_null($request->get('etat')) ? null : ((integer) $request->get('etat'));
-
-        if ($priory === 0 || $etat === 0) {
-            if ($admin) {
-                $tickets = Ticket::orderBy('updated_at', 'desc')->orderBy('orden')->paginate(10);
-            }
-            else if ($agent) {
-                $tickets = Ticket::where('agent_id', Auth::user()->id)
-                    ->orderBy('updated_at', 'desc')->orderBy('orden')->paginate(10);
-            } else {
-                $tickets = Ticket::where('user_id', Auth::user()->id)
-                    ->orderBy('orden')
-                    ->orderBy('updated_at', 'desc')->paginate(10);
-            }
+        if (Auth::user()->role === 'admin') {
+            $tickets = Ticket::filtersService()->orderBy('orden')->orderBy('updated_at', 'desc')->paginate(10);
+        }
+        else if (Auth::user()->role === 'agent') {
+            $tickets = Ticket::filtersService()->where('agent_id', Auth::user()->id)
+                ->orderBy('updated_at', 'desc')->orderBy('orden')->paginate(10);
         } else {
-            if ($admin) {
-                $tickets = Ticket::priory($priory)->status($etat)
-                    ->orderBy('orden')->orderBy('updated_at', 'desc')->paginate(10);
-            }
-            else if ($agent) {
-                $tickets = Ticket::priory($priory)->status($etat)
-                    ->orderBy('updated_at', 'desc')->orderBy('orden')
-                    ->where('agent_id', Auth::user()->id)->paginate(10);
-            } else {
-                $tickets = Ticket::priory($priory)->status($etat)
-                    ->orderBy('orden')->orderBy('updated_at', 'desc')->where('user_id', Auth::user()->id)->paginate(10);
-            }
+            $tickets = Ticket::filtersService()->where('user_id', Auth::user()->id)
+                ->orderBy('orden')->orderBy('updated_at', 'desc')->paginate(10);
         }
 
         return view('servicio.table', compact('tickets'));
