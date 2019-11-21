@@ -16,6 +16,7 @@
     "vue-resource": "^1.0.3"
   },
   "dependencies": {
+    "@oclif/config": "^1.13.3",
     "chart.js": "^2.4.0",
     "simplelightbox": "^1.17.3"
   }
