@@ -9,6 +9,7 @@ use DB;
 use App\Ticket;
 use App\Traitement;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Session;
 use Excel;
@@ -25,7 +26,6 @@ class ServicioController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('isadmin')->only('export_xls');
-
     }
 
     /**
@@ -59,16 +59,22 @@ class ServicioController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-        $nFiles = count($request->file('files'));
-        foreach (range(0, $nFiles) as $item) {
-            $this->rules['files.'.$item] = 'image|mimes:jpeg,bmp,png|max:2000';
+        if ($request->hasFile('files')) {
+            $nFiles = count($request->file('files'));
+            foreach (range(0, $nFiles) as $item) {
+                $this->rules['files.' . $item] = 'image|mimes:jpeg,bmp,png|max:2000';
+            }
         }
 
         $this->validate($request, $this->rules);
 
         $data = array_add($data, 'user_id', Auth::user()->id);
-        $data = array_add($data,'categorie_id',
-            Categories::where('name','=','Soporte Técnico')->first()['id']);
+        $data = array_add(
+            $data,
+            'categorie_id',
+            Categories::where('name', '=', 'Soporte Técnico')->first()['id']
+        );
+        $data = array_add($data, 'fecha_creacion', Carbon::now()->toDateTimeString());
         $ticket = Ticket::create($data);
 
         if ($request->hasFile('files')) {
@@ -77,6 +83,7 @@ class ServicioController extends Controller
                 $originalName = $file->getClientOriginalName();
                 $uploadImage  = "public/tickets/$ticket->id/";
                 $file->storeAs($uploadImage, $originalName);
+                $file->move(public_path('/') . $uploadImage, $originalName);
                 //Storage::disk('public')->put("tickets/$ticket->id",$originalName);
                 //$fileName = pathinfo($originalName,PATHINFO_FILENAME);
 
@@ -93,19 +100,21 @@ class ServicioController extends Controller
         return redirect('servicios_all');
     }
 
-    public function changeEtatToTerminado ($id) {
+    public function changeEtatToTerminado($id)
+    {
         $ticket = Ticket::findOrFail((int) $id);
         $ticket->etat = 'Terminado';
         $ticket->save();
         return redirect('servicios_all');
     }
 
-    public function ver ($id) {
+    public function ver($id)
+    {
         $traitements = Traitement::where('ticket_id', $id)->get();
         $ticket = Ticket::with('files')->findOrFail($id);
         $param = 1;
 
-        return view('servicio.show', compact('ticket', 'traitements','param'));
+        return view('servicio.show', compact('ticket', 'traitements', 'param'));
     }
 
 

@@ -17,6 +17,7 @@ class Ticket extends Model
         'user_id',
         'priorite_id',
         'categorie_id',
+        'fecha_creacion',
         'fecha_consulta',
         'orden',
         'agent_id'
@@ -54,6 +55,15 @@ class Ticket extends Model
         return $this->hasMany(UploadFile::class, 'ticket_id');
     }
 
+    public function getCreatedAtAttribute($key)
+    {
+        $dateCreated = Carbon::parse($this->attributes['created_at']);
+        setlocale(LC_ALL, "es_ES");
+
+        return $dateCreated->format('Y/m/d');
+    }
+
+
     /*SCOPE*/
 
     public function scopeFiltersService($query)
@@ -62,18 +72,18 @@ class Ticket extends Model
         $etat = request()->input('etat');
         $fecha_incial = request()->get('fecha1');
         $item = ($etat === 1) ? 'Creado' : ($etat === 2 ? 'En curso' : ($etat === 3 ? 'Terminado' : null));
-        $query->when($priory, function($query) use ($priory) {
-            $query->where('priorite_id',$priory);
-        })->when($item, function($query) use ($item) {
-            $query->where('etat',$item);
-        })->when($fecha_incial, function ($query) use ($fecha_incial){
-            $query->where('fecha_consulta','=',$fecha_incial);
+        $query->when($priory, function ($query) use ($priory) {
+            $query->where('priorite_id', $priory);
+        })->when($item, function ($query) use ($item) {
+            $query->where('etat', $item);
+        })->when($fecha_incial, function ($query) use ($fecha_incial) {
+            $query->where('fecha_creacion', '=', $fecha_incial);
         });
     }
 
     public function scopePriory($query, $priory)
     {
-        if ((trim($priory) !== '' || ! is_null($priory))) {
+        if ((trim($priory) !== '' || !is_null($priory))) {
             $query->where('priorite_id', $priory);
         }
     }
@@ -82,7 +92,7 @@ class Ticket extends Model
     {
         $status = config('options.status');
         $item = ($etat === 1) ? 'Creado' : ($etat === 2 ? 'En curso' : ($etat === 3 ? 'Terminado' : null));
-        if ((trim($item) !== '' || ! is_null($item)) && isset($status[$etat])) {
+        if ((trim($item) !== '' || !is_null($item)) && isset($status[$etat])) {
             $query->where('etat', '=', $item);
         }
     }
@@ -91,7 +101,7 @@ class Ticket extends Model
 
     public function getDiasAttribute($key)
     {
-        $fecha_creacion = Carbon::parse($this->attributes['created_at']);
+        $fecha_creacion = Carbon::parse($this->attributes['fecha_creacion']);
         $fecha_final = Carbon::parse($this->attributes['updated_at']);
         $fecha_actual = Carbon::now();
         $diffActual = $fecha_creacion->diffInDays($fecha_actual);
@@ -101,16 +111,16 @@ class Ticket extends Model
         $data = collect();
 
         if ($estado === 'Terminado' && $this->traitements()->count() >= 1) {
-            $data->put('time', $diffTerminado.' día'.($diffTerminado !== 1 ? 's' : ''));
+            $data->put('time', $diffTerminado . ' día' . ($diffTerminado !== 1 ? 's' : ''));
             $data->put('color', "#41B883");
         } else {
             if ($estado === 'En curso' && $this->traitements()->count() >= 1) {
                 $respuesta = $this->traitements()->latest()->first()->duree;
-                $calculo = (integer) ($respuesta / 60);
-                $data->put('time', $calculo .' hr'.($calculo !== 1 ? 's' : ''));
+                $calculo = (int) ($respuesta / 60);
+                $data->put('time', $calculo . ' hr' . ($calculo !== 1 ? 's' : ''));
                 $data->put('color', "#FFE300");
             } else {
-                $data->put('time', $diffActual.' día'.($diffActual !== 1 ? 's' : ''));
+                $data->put('time', $diffActual . ' día' . ($diffActual !== 1 ? 's' : ''));
                 $data->put('color', "#FF4337");
             }
         }
