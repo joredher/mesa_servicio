@@ -25,4 +25,4 @@ Mesa de servicio (HelpDesk)
 
 > Versión `1.0`
 
-> Autor: @joredher
+> Autors: @Dayro y @Raphael
