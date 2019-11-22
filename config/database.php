@@ -1,5 +1,14 @@
 <?php
 
+$url = parse_url(getenv("CLEARDB_DATABASE_URL"));
+
+$host = $url["host"];
+$username = $url["user"];
+$password = $url["pass"];
+$database = substr($url["path"], 1);
+
+
+
 return [
 
     /*
@@ -26,7 +35,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => env('DB_CONNECTION', 'mysql://b86e6d96e53642:7475f534@us-cdbr-iron-east-05.cleardb.net/heroku_23eda0cdcbde25e?reconnect=true'),
 
     /*
     |--------------------------------------------------------------------------
@@ -46,6 +55,17 @@ return [
 
     'connections' => [
 
+        'mysql://b86e6d96e53642:7475f534@us-cdbr-iron-east-05.cleardb.net/heroku_23eda0cdcbde25e?reconnect=true' => array(
+            'driver' => 'mysql',
+            'host' => $host,
+            'database' => $database,
+            'username' => $username,
+            'password' => $password,
+            'charset' => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix' => '',
+        ),
+
         'sqlite' => [
             'driver' => 'sqlite',
             'database' => env('DB_DATABASE', database_path('database.sqlite')),
@@ -54,11 +74,11 @@ return [
 
         'mysql' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', 'db4free.net'),
+            'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'mesa_servicio'),
-            'username' => env('DB_USERNAME', 'capresoca'),
-            'password' => env('DB_PASSWORD', 'capremesa'),
+            'database' => env('DB_DATABASE', 'forge'),
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
